@@ -1,7 +1,9 @@
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const mapboxApiKey =
   "pk.eyJ1IjoicG9saW5hMzc1IiwiYSI6ImNsdGN0ZjRxOTAzbmgya285aTJ1enB4MXUifQ.9ChwbB6ofV4-rnpq9IE3Fw";
 const searchQuery = ref("");
@@ -18,7 +20,6 @@ const getSearchResult = () => {
           `https://api.mapbox.com/geocoding/v5/mapbox.places/${searchQuery.value}.json?access_token=${mapboxApiKey}&types=place`
         );
         searchResults.value = data.features;
-        console.log(data.features);
       } catch (e) {
         error.value = true;
       }
@@ -26,6 +27,22 @@ const getSearchResult = () => {
     }
     searchResults.value = null;
   }, 500);
+};
+
+const previewCity = (searchResult) => {
+  const [city, state] = searchResult.place_name.split(", ");
+  router.push({
+    name: "city",
+    params: {
+      state: state.replaceAll(" ", ""),
+      city,
+    },
+    query: {
+      lat: searchResult.geometry.coordinates[1],
+      lng: searchResult.geometry.coordinates[0],
+      preview: true,
+    },
+  });
 };
 </script>
 
@@ -52,6 +69,7 @@ const getSearchResult = () => {
             v-for="result in searchResults"
             :key="result.id"
             class="py-2 cursor-pointer"
+            @click="previewCity(result)"
           >
             {{ result.place_name }}
           </li>
