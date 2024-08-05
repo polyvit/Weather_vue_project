@@ -117,6 +117,7 @@ const getWeatherData = async () => {
     const { data } = await axios.get(
       `https://api.openweathermap.org/data/3.0/onecall?lat=${route.query.lat}&lon=${route.query.lng}&exclude={part}&appid=${opeweatherApiKey}`
     );
+
     const localOffset = new Date().getTimezoneOffset() * 60000;
     const utc = data.current.dt * 1000 + localOffset;
     data.currentTime = utc + 1000 * data.timezone_offset;

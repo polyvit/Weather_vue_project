@@ -15,7 +15,7 @@ import { useRouter } from "vue-router";
 
 const savedCities = ref([]);
 const router = useRouter();
-const opeweatherApiKey = "6ea716c1d27aebee221e04d81ad335c6";
+const opeweatherApiKey = import.meta.env.VITE_OPEN_WEATHER_API_KEY;
 
 const getCitites = async () => {
   if (localStorage.getItem("savedCities")) {
@@ -35,7 +35,6 @@ const getCitites = async () => {
     weatherData.forEach(({ data }, i) => {
       savedCities.value[i].weather = data;
     });
-    console.log(savedCities.value);
   }
 };
 await getCitites();
